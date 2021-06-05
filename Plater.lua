@@ -5900,24 +5900,18 @@ end
 						--which color the use in the nameplate based on the threat status
 						--this color can be overritten by the 'no tank aggro' check
 						local colorToUse
-						if (threatStatus == 1) then --player is almost aggroing the mob
-							--show aggro warning indicators
-							if profile.show_aggro_glow then
-								self.aggroGlowUpper:Show()
-								self.aggroGlowLower:Show()
-							end
-							if profile.dps.use_aggro_solo and not IsInGroup() then
-								colorToUse = DB_AGGRO_DPS_COLORS.solo
-							else
-								colorToUse = DB_AGGRO_DPS_COLORS.pulling
-							end
-							
-						elseif (threatStatus == 0) then
-							colorToUse = DB_AGGRO_DPS_COLORS.noaggro
-							
+						if (threatpct < 50) then
+							red = (threatpct/100)*2
+							green = 1
+						else
+							red = 1
+							green = 1 - (( threatpct - 50 )/100)*2
 						end
-					
-						if (Plater.ZoneInstanceType == "party" or Plater.ZoneInstanceType == "raid") then
+
+                        colorToUse = { red, green, 0, 1 }
+
+
+                        if (Plater.ZoneInstanceType == "party" or Plater.ZoneInstanceType == "raid") then
 							--check if can check for no tank aggro
 							if (DB_AGGRO_CAN_CHECK_NOTANKAGGRO) then
 								local unitTarget = UnitName (self.targetUnitID)
